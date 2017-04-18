@@ -36,7 +36,26 @@
     </div>
     <script>
         $(function () {
+            // TODO: why io is visible here
             var socket = io.connect();
+            var $messageForm = $('#messageForm');
+            var $message = $('#message');
+            var $chat = $('#chat');
+
+            $messageForm.submit(function (e) {
+                // Cancel the default action of the click 
+                // (we won't take browser to a new URL)
+                e.preventDefault();
+                console.log('Submitted');
+                // this is listened by sever (server.js)
+                socket.emit('send message', $message.val());
+                // Empty text area
+                $message.val('');
+            });
+
+            socket.on('new message', function (data) {
+                $chat.append('<div class="well">' + data.msg + '</div>');
+            });
         });
     </script>
 </body>
